@@ -19,8 +19,7 @@ jobs:
 
       - restore_cache: 
           keys: 
-            - frontend-dependencies-{{ checksum "frontend/package.json" }}
-            - frontend-dependencies-
+            - frontend-dependencies-{{ checksum "frontend/yarn.lock" }}
 
       - run:
           name: Install Frontend
@@ -29,7 +28,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: frontend-dependencies-{{ checksum "frontend/package.json" }}
+          key: frontend-dependencies-{{ checksum "frontend/yarn.lock" }}
 
       - run:
           name: Build Frontend
@@ -53,13 +52,13 @@ jobs:
     steps:
       - checkout
 
-      # - attach_workspace:
-      #     # Must be absolute path or relative path from working_directory
-      #     at: ~/app/frontend
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/app/frontend
 
-      # - run:
-      #     name: Copy frontend build into API /public folder
-      #     command: cp -r ~/app/frontend/dist ~/app
+      - run:
+          name: Copy frontend build into API /public folder
+          command: cp -r ~/app/frontend/dist ~/app
 
       - restore_cache: 
           keys: 
@@ -94,69 +93,16 @@ jobs:
           name: Push image to Docker.io Hub
           command: |
             VERSION=$(git rev-parse --short HEAD)
-            docker build ./api -t "navarrocity/bank-api:latest"  -f ./api/Dockerfile
+            docker build ./api -t "navarrocity/stuf-api:latest"  -f ./api/Dockerfile
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            docker push navarrocity/bank-api:latest
-
-  plaidsync:
-    executor: primary
-
-    steps:
-      - checkout
-      
-      # - run:
-      #     name: Check for changes in plaid-sync
-      #     command: |
-      #       if git diff --quiet HEAD^ HEAD -- plaid-sync/; then
-      #         echo "No changes in 'plaid-sync/' since the last commit."
-      #         circleci step halt
-      #       else
-      #         echo "Changes detected in 'plaid-sync/' proceeding..."
-      #       fi
-
-      - restore_cache: 
-          keys: 
-            - plaidsync-deps-{{ checksum "plaid-sync/yarn.lock" }}
-
-      - run:
-          name: Install Node
-          command: cd plaid-sync && bash ./prebuild.sh && yarn install
-
-      - run: 
-          name: Version API
-          command: |
-            cd plaid-sync
-            VERSION=$(git rev-parse --short HEAD)
-            echo "export const version = '$VERSION';" > ./version.ts
-
-      - save_cache:
-          paths:
-            - plaid-sync/node_modules
-          key: plaidsync-deps-{{ checksum "plaid-sync/yarn.lock" }}
-
-      - run:
-          name: Typescript compile
-          command: cd plaid-sync && yarn check && yarn compile && find . -name "*.ts" -type f -not -path "./node_modules/*" -delete
-
-      - setup_remote_docker:
-          docker_layer_caching: true
-
-      - run:
-          name: Push image to Docker.io Hub
-          command: |
-            VERSION=$(git rev-parse --short HEAD)
-            docker build ./plaid-sync -t "navarrocity/bank-plaid-sync:latest"  -f ./plaid-sync/Dockerfile
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            docker push navarrocity/bank-plaid-sync:latest
+            docker push navarrocity/stuf-api:latest
 
 workflows:
   build-deploy:
     jobs:
-      # - frontend:
-      #     <<: *main_only
+      - frontend:
+          <<: *main_only
       - api:
           <<: *main_only
-      #     requires: 
-      #       - frontend
-      - plaidsync:
-          <<: *main_only
+          requires: 
+            - frontend
