@@ -1,3 +1,6 @@
 - If a user creates a new game while hosting or being a part of another one, have them leave the old one first.
     - Socket disconects might handle this?
 - On game ended, go to a "thanks for playing" screen
+- What if the current player leaves?
+- What if host leaves the game?
+- Session id needs to be saved as a value, as the req.session.id value can rotate?

@@ -43,13 +43,13 @@ export async function createGame(): Promise<CreateResponse> {
     return response.data as CreateResponse
 }
 
-type JoinResponse = {
+type StandardResponse = {
     game?: Game,
     session_id?: string,
     error?: string,
 }
 
-export async function joinGame(name: string, image: string): Promise<JoinResponse> {
+export async function joinGame(name: string, image: string): Promise<StandardResponse> {
     const state = getState()
     const game_id = state.game.data.id
 
@@ -57,7 +57,7 @@ export async function joinGame(name: string, image: string): Promise<JoinRespons
         console.error(state, "No local game id found")
     }
 
-    const response = await axios.post<JoinResponse>("/v1/join", {
+    const response = await axios.post<StandardResponse>("/v1/join", {
         game_id,
         name,
         image
@@ -81,8 +81,8 @@ export async function joinGame(name: string, image: string): Promise<JoinRespons
     return response.data
 }
 
-export async function getGame(game_id: string): Promise<JoinResponse> {
-    const response = await axios.post<JoinResponse>(`/v1/get`, { game_id })
+export async function getGame(game_id: string): Promise<StandardResponse> {
+    const response = await axios.post<StandardResponse>(`/v1/get`, { game_id })
 
     if(response.status !== 200){
         console.error(response)
@@ -91,10 +91,33 @@ export async function getGame(game_id: string): Promise<JoinResponse> {
     return response.data
 }
 
-export async function markReady(): Promise<JoinResponse> {
+export async function markReady(): Promise<StandardResponse> {
     const state = getState()
     const game_id = state.game.data.id
-    const response = await axios.post<JoinResponse>(`/v1/ready`, { game_id })
+    const response = await axios.post<StandardResponse>(`/v1/ready`, { game_id })
+
+    if(response.status !== 200){
+        console.error(response)
+    }
+
+    const { game, session_id } = response.data
+
+    if(game && session_id){
+        dispatch(
+            setGame({
+                game,
+                sessionId: session_id
+            })
+        )
+    }
+
+    return response.data
+}
+
+export async function chooseQuestion(question: string){
+    const state = getState()
+    const game_id = state.game.data.id
+    const response = await axios.post<StandardResponse>(`/v1/choose-question`, { game_id, question })
 
     if(response.status !== 200){
         console.error(response)

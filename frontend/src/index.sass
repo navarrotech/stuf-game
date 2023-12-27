@@ -232,3 +232,57 @@ $spriteWidth: 80px
 
         .image
             filter: grayscale(100%)
+
+.question-card
+    min-height: 40vh
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+    transition: transform 200ms ease
+
+    > .title
+        min-height: 120px
+        padding-bottom: 3vh
+
+    &::after
+        content: ' '
+        background: $logoBlue
+        position: absolute
+        bottom: 0
+        left: 0
+        right: 0
+        width: 100%
+        height: 8vh
+        
+
+.question-cards
+
+    .column:nth-child(1)
+        .question-card
+            transform-origin: left top
+
+    .column:nth-child(2)
+        .question-card
+            transform-origin: center top
+
+    .column:nth-child(3)
+        .question-card
+            transform-origin: right top
+
+    &.has-chosen
+
+        .column:nth-child(1)
+            .question-card:not(.is-chosen)
+                transform: scale(0.8) translateX(20%)
+
+        .column:nth-child(2)
+            .question-card:not(.is-chosen)
+                transform: scale(0.8)
+
+        .column:nth-child(3)
+            .question-card:not(.is-chosen)
+                transform: scale(0.8) translateX(-20%)
+
+        .question-card.is-chosen
+            transform: scale(1.1)

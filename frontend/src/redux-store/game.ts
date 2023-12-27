@@ -29,11 +29,13 @@ const initialState: State = {
     started: false,
     ended: false,
   
+    round_title: 'Just Getting Started...',
     current_player: null,
     current_question: null,
     current_question_time_expiration: null,
     current_submissions: {},
     current_guess: {},
+    finished_submissions: false,
   
     settings: {
         allow_nsfw: false,
@@ -67,7 +69,10 @@ const slice = createSlice({
       }
 
       state = {
-        data: game,
+        data: {
+          ...state.data,
+          ...game,
+        },
         mySessionId: id,
         me: game?.players.find(player => player?.id === id),
       }

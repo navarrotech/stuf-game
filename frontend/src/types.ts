@@ -2,18 +2,20 @@
 
 export type Game = {
     id: string | null;
-    questions_asked: Record<number, string[]>;
+    questions_asked: Record<string, boolean>;
     host_id: string | null;
     players: Player[];
   
     started: boolean;
     ended: boolean;
   
+    round_title: string;
     current_player: string | null;
-    current_question: number | null;
+    current_question: string | null;
     current_question_time_expiration: number | null;
     current_submissions: Record<string, string>;
     current_guess: Record<string, string>;
+    finished_submissions: boolean;
   
     settings: GameSettings;
   
@@ -35,6 +37,8 @@ export type Player = {
     image: string;
     name: string;
     score: number;
+    detective_score: number;
+    deception_score: number;
     answers: Record<number, string>;
     status: "connected" | "disconnected"
     ready: boolean;

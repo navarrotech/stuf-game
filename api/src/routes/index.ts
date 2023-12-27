@@ -9,7 +9,8 @@ import getGame  from './get-game'
 import joinGame from './join-game'
 import endGame  from './end-game'
 
-import ready    from './ready'
+import ready from './ready'
+import chooseQuestion from './choose-question'
 
 export const routes: Route[] = [
     newGame,
@@ -18,4 +19,5 @@ export const routes: Route[] = [
     endGame,
 
     ready,
+    chooseQuestion,
 ]

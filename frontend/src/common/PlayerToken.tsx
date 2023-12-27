@@ -6,11 +6,16 @@ import { getSpriteUrl } from "./sprites";
 
 type Props = {
     player: Player,
+    highlight?: boolean,
     subtitle?: string
 }
-export default function PlayerToken({ player, subtitle }: Props){
+export default function PlayerToken({ player, highlight, subtitle }: Props){
     const isDisconnected = player.status === "disconnected"
-    return <div className={"level-left player-token" + (isDisconnected ? " is-disconnected" : "")}>
+    return <div className={
+        "level-left player-token" 
+        + (isDisconnected ? " is-disconnected" : "") 
+        + (highlight ? " is-highlighted" : "") // TODO: Highlight
+    }>
         <div className="level-item">
             <figure className="image">
                 <img src={getSpriteUrl(player.image)} alt={player.name} />
@@ -31,14 +36,16 @@ export default function PlayerToken({ player, subtitle }: Props){
 
 type PlayerListProps = {
     players: Player[],
+    highlight?: string,
     subtitle?: (player: Player) => string,
 }
-export function PlayerList({ players, subtitle }: PlayerListProps){
+export function PlayerList({ players, highlight, subtitle }: PlayerListProps){
     return <div className="player-list">
         { players.map(player => {
             return <PlayerToken
                 key={player.id}
                 player={player}
+                highlight={highlight === player.id}
                 subtitle={subtitle?.(player)}
             />
         }) }

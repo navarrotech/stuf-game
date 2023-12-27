@@ -16,11 +16,13 @@ export async function newGame(host_id: string): Promise<Game> {
         started: false,
         ended: false,
 
+        round_title: 'Just Getting Started...',
         current_player: null,
         current_question: null,
         current_question_time_expiration: null,
         current_submissions: {},
         current_guess: {},
+        finished_submissions: false,
 
         settings: {
             allow_nsfw: false,
@@ -46,6 +48,8 @@ export async function joinGame(id: string, name: string, image: string, game_id:
         image,
         name,
         score: 0,
+        detective_score: 0,
+        deception_score: 0,
         answers: {},
         status: "connected",
         ready: false,
