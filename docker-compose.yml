@@ -1,0 +1,48 @@
+version: '3.8'
+
+# This docker-compose is for development only
+# For production, the docker-compose.prod.yml will be defined in portainer.io
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    container_name: stuff-api
+    restart: unless-stopped
+    environment:
+      PORT: 4000
+      DOMAIN: localhost
+      NODE_ENV: development
+
+      SESSION_SECRET: 12345
+      DATABASE_URL: redis://default:redis@stuff-redis:6379
+    depends_on:
+      - db
+    volumes:
+      - ./api:/app
+    command: yarn run dev
+    ports:
+      - 4000:4000
+    networks:
+      - default
+
+  db:
+    container_name: stuff-redis
+    image: redis:7.2.3
+    restart: unless-stopped
+    volumes:
+      - redis-data:/var/lib/redis/data
+    environment:
+      REDIS_USERNAME: redis
+      REDIS_PASSWORD: redis
+    ports:
+      - 4001:6379
+    networks:
+      - default
+
+volumes:
+  redis-data:
+ 
+networks:
+  default:

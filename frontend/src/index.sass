@@ -1,0 +1,234 @@
+@use 'sass:color'
+
+@import './theme'
+
+// Carter One & Montserrat
+@import url('https://fonts.googleapis.com/css2?family=Carter+One&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap')
+
+// Variable Changes
+$family-sans-serif: 'Montserrat', Arial, Helvetica, sans-serif
+$carter-one-font: 'Carter One', 'Montserrat', Arial, Helvetica, sans-serif
+
+@import "bulma/sass/utilities/mixins"
+
+$tabs-border-bottom-color: $border !default
+$tabs-border-bottom-style: solid !default
+$tabs-border-bottom-width: 1px !default
+$tabs-link-color: $text !default
+$tabs-link-hover-border-bottom-color: $text-strong !default
+$tabs-link-hover-color: $text-strong !default
+$tabs-link-active-border-bottom-color: $link !default
+$tabs-link-active-color: $link !default
+$tabs-link-padding: 0.5em 1em !default
+
+$tabs-boxed-link-radius: $radius !default
+$tabs-boxed-link-hover-background-color: $background !default
+$tabs-boxed-link-hover-border-bottom-color: $primary !default
+
+$tabs-boxed-link-active-background-color: $primary !default
+$tabs-boxed-link-active-border-color: $primary 
+$tabs-boxed-link-active-border-bottom-color: transparent !default
+
+$tabs-toggle-link-border-color: $primary 
+$tabs-toggle-link-border-style: solid !default
+$tabs-toggle-link-border-width: 1px !default
+$tabs-toggle-link-hover-background-color: $background !default
+$tabs-toggle-link-hover-border-color: $primary
+$tabs-toggle-link-radius: $radius !default
+$tabs-toggle-link-active-background-color: $primary
+$tabs-toggle-link-active-border-color: $primary
+$tabs-toggle-link-active-color: $link-invert !default
+
+$pagination-current-background-color: $primary !important
+$pagination-current-border-color: #ffffff !important
+$pagination-active-background-color: $primary !important
+$pagination-active-border-color: #ffffff !important
+
+@import 'bulma/bulma'
+// @import '@navarrotech/bulma'
+@import 'bulma-divider/src/sass/index.sass'
+@import 'bulma-tooltip'
+
+@mixin colorOnTheme($color, $colorBright, $colorDark)
+    background: $colorBright
+    background: -moz-linear-gradient(180deg, $colorBright 0%, $colorDark 100%)
+    background: -webkit-linear-gradient(180deg, $colorBright 0%, $colorDark 100%)
+    background: linear-gradient(180deg, $colorBright 0%, $colorDark 100%)
+    min-height: 100vh
+    max-height: 100vh
+
+    .section
+        display: flex
+        align-items: center
+        justify-content: center
+        min-height: 70vh
+        max-height: 100vh
+
+    .button.is-themed
+        background: $colorBright
+        border: 2px solid color.adjust($colorBright, $lightness: -15%)
+        color: white !important
+
+        &:hover
+            background: color.adjust($colorBright, $lightness: -25%)
+
+    .banner
+        background: $color !important
+
+.banner-container
+    color: white !important
+    min-height: 100vh
+    max-height: 100vh
+
+    .banner-content
+        min-height: calc(100vh - 9em)
+        max-height: calc(100vh - 9em)
+        min-width: calc(92.5vw)
+        max-width: calc(92.5vw)
+        width: 100%
+        display: flex
+        justify-content: center
+        flex-direction: column
+        align-items: center
+
+    .banner
+        width: 100%
+        position: fixed
+        bottom: 0
+        left: 0
+        right: 0
+
+        padding: 0.65em 1em
+
+        font-size: 3rem
+        font-weight: 700
+
+        .banner-left > svg
+            font-size: 1.75em !important
+            margin-right: 0.25em
+
+html
+    &.is-pink
+        @include colorOnTheme($pink, $pinkBright, $pinkDark)
+    &.is-blue
+        @include colorOnTheme($blue, $blueBright, $blueDark)
+    &.is-purple
+        @include colorOnTheme($purple, $purpleBright, $purpleDark)
+    &.is-orange
+        @include colorOnTheme($orange, $orangeBright, $orangeDark)
+    &.is-green
+        @include colorOnTheme($green, $greenBright, $greenDark)
+    &.is-red
+        @include colorOnTheme($red, $redBright, $redDark)
+    &.is-cyan
+        @include colorOnTheme($cyan, $cyanBright, $cyanDark)
+    &.is-beige
+        @include colorOnTheme($beige, $beigeBright, $beigeDark)
+
+.is-fullwidth
+    width: 100% !important
+
+.image
+    &.is-centered
+        display: block
+        margin-left: auto
+        margin-right: auto
+
+    &.is-256x256
+        max-width: 256px
+        max-height: 256px
+
+    &.is-400x400
+        max-width: 400px
+        max-height: 400px
+
+.carter-one
+    font-family: $carter-one-font
+
+    &.is-themed
+        font-weight: 900
+        color: $logoCyan
+        -webkit-text-stroke-width: 1px
+        -webkit-text-stroke-color: black
+
+.button
+    &.is-link
+        border-color: color.adjust($blueBright, $lightness: -12%) !important
+    &.is-success
+        border-color: color.adjust($greenBright, $lightness: -12%) !important
+    &.is-warning
+        border-color: color.adjust($orangeBright, $lightness: -12%) !important
+    &.is-danger
+        border-color: color.adjust($redBright, $lightness: -12%) !important
+
+.miniContainer
+    display: flex
+    flex-direction: column
+    max-width: 300px
+    margin: 0 auto
+
+.deleteBtn
+    position: fixed
+    top: 2em
+    right: 2em
+
+$spriteWidth: 80px
+.sprites
+    display: flex
+    flex-wrap: wrap
+    justify-content: flex-start
+    align-items: flex-end
+    gap: 0.5em
+    margin: 0 auto
+    width: 100%
+
+    &.has-active
+        .sprite:not(.is-active):not(:hover)
+            filter: grayscale(80%)
+
+    .sprite
+        width: $spriteWidth
+        cursor: pointer
+        transition: transform 200ms ease
+
+        &:hover,
+        &.is-active
+            transform: scale(1.1)
+
+        &.is-active
+            $width: 1px
+            -webkit-filter: drop-shadow($width $width 0 $logoBlue) drop-shadow(-$width -$width 0 $logoBlue)
+            filter: drop-shadow($width $width 0 $logoBlue) drop-shadow(-$width -$width 0 $logoBlue)
+
+.is-player-menu
+    max-width: calc(($spriteWidth * 7) + (0.5em * 6)) !important
+
+.player-list
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-wrap: wrap
+    gap: 1em
+    width: 100%
+    max-width: calc((300px * 4) + (1em * 3))
+
+    > .player-token
+        width: 300px
+
+.player-token
+    .title
+        color: white
+        font-size: 1.75rem
+
+    .subtitle
+        color: white
+        font-size: 1.25rem
+
+    .image
+        max-width: 70px
+
+    &.is-disconnected
+        opacity: 0.5
+
+        .image
+            filter: grayscale(100%)
