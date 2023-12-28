@@ -1,11 +1,17 @@
 Fun ideas:
 - Have some fun app responses like "y'all are nasty" when there's a lot of NSFW or "player 1 must be really horny?"
+- Vote kick or kick/ban ability
+- Show game id in top right corner 24/7, clickable to copy link.
 
 MVP:
 - Sound effects
+- Mobile
 - If a user creates a new game while hosting or being a part of another one, have them leave the old one first.
     - Socket disconects might handle this?
-- On game ended, go to a "thanks for playing" screen
 - What if the current player leaves?
 - What if a player leaves in the middle of submissions? Need to recalc if submissions are done or not.
 - What if host leaves the game?
+- Implement settings
+- Implement endscreen
+- How to play screen
+- On game ended, go to a "thanks for playing" screen
