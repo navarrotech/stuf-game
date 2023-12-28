@@ -36,6 +36,10 @@ const initialState: State = {
     current_submissions: {},
     current_guess: {},
     finished_submissions: false,
+    finished_revealing: false,
+    finished_guessing: false,
+
+    shuffle_seed: 0,
   
     settings: {
         allow_nsfw: false,

@@ -59,7 +59,7 @@ export async function init(httpServer: any){
         }
 
         // Handle rejoining clause
-        const playerIndex = game.players.findIndex((player: any) => player.id === sessionId);
+        const playerIndex = game.players.findIndex((player: any) => player?.id === sessionId);
         if(playerIndex !== -1){
             game.players[playerIndex].status = "connected";
             updateGame(game);
@@ -96,12 +96,13 @@ export async function init(httpServer: any){
                 if(!game){
                     return;
                 }
-                
-                const playerIndex = game.players.findIndex((player: any) => player.id === sessionId);
-                if(playerIndex !== -1){
-                    delete game.players[playerIndex]
-                    updateGame(game);
-                }
+    
+                // Remove player:
+                game.players = game.players.filter((player: any) => player.id !== sessionId);
+                delete game.current_guess[sessionId];
+                delete game.current_submissions[sessionId];
+
+                updateGame(game);
             }, 1000 * 60 * 2);
 
             const sockets = socketsByGameId[gameid];

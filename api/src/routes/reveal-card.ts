@@ -1,17 +1,17 @@
 // Copyright © 2023 Navarrotech
 
-import type { Request, Response, Route, Game, Player } from "../types";
+import type { Request, Response, Route } from "../types";
 
 import { gameIdSchema, yup } from "../schemas";
 import { getGame, updateGame } from "../game";
 
 type RequestBody = {
     game_id: string,
-    question: string,
+    player_id: string,
 }
 
 async function handler(req: Request, res: Response): Promise<void> {
-    const { game_id, question } = req.body as RequestBody;
+    const { game_id, player_id } = req.body as RequestBody;
     const session_id = req.session.id;
 
     const game = await getGame(game_id);
@@ -31,9 +31,21 @@ async function handler(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    game.current_question = question;
-    game.questions_asked[question] = true;
-    game.current_question_time_expiration = Date.now() + 1000 * 60 * 2;
+    if(!game.current_question){
+        res.status(400).json({
+            error: "No question has been chosen yet",
+        })
+        return;
+    }
+
+    if(game.current_player !== session_id){
+        res.status(400).json({
+            error: "It's not your turn",
+        })
+        return;
+    }
+
+    game.current_submissions[player_id].revealed = true;
     updateGame(game);
 
     res.status(200).send({
@@ -46,17 +58,16 @@ const validiator = yup
     .object()
     .shape({
         game_id: gameIdSchema,
-        question: yup
+        player_id: yup
             .string()
-            .typeError("Question must be a string")
+            .typeError("player_id must be a string")
             .trim()
-            .min(1, "Question must be at least 1 character")
-            .max(100, "Question must be at most 100 characters")
-            .required("Question is required"),
+            .max(36, "player_id is too long")
+            .required("player_id is required"),
     })
 
 export default {
-    path: "/v1/choose-question",
+    path: "/v1/reveal-card",
     method: "post",
     handler,
     validiator,

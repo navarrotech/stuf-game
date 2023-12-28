@@ -99,13 +99,13 @@ export default function ChooseCard({ game }: Props){
 }
 
 function FormatQuestion(question: string){
-    const indexOfStuf = question.indexOf("STUF")
-    const beforeStuf = question.slice(0, indexOfStuf)
-    const afterStuf = question.slice(indexOfStuf + 4)
+    const indexOfStuff = question.indexOf("Stuff")
+    const beforeStuff = question.slice(0, indexOfStuff)
+    const afterStuff = question.slice(indexOfStuff + 4)
 
     return <>
-        <span className="has-text-weight-normal">{ beforeStuf }</span>
-        <span><strong>STUF</strong></span>
-        <span className="has-text-weight-normal">{ afterStuf }</span>
+        <span className="has-text-weight-normal">{ beforeStuff }</span>
+        <span><strong>STUFF</strong></span>
+        <span className="has-text-weight-normal">{ afterStuff }</span>
     </>
 }

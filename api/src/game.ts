@@ -7,7 +7,7 @@ import { emitUpdate, closeGame } from "./socketio";
 
 export async function newGame(host_id: string): Promise<Game> {
     const gameid = await makeUniqueGameId();
-    const game = {
+    const game: Game = {
         id: gameid,
         questions_asked: {},
         host_id: host_id,
@@ -23,6 +23,10 @@ export async function newGame(host_id: string): Promise<Game> {
         current_submissions: {},
         current_guess: {},
         finished_submissions: false,
+        finished_revealing: false,
+        finished_guessing: false,
+
+        shuffle_seed: newSeed(),
 
         settings: {
             allow_nsfw: false,
@@ -85,4 +89,10 @@ export async function updateGame(game: Game): Promise<void> {
 export async function endGame(game_id: string): Promise<void> {
     redis.del(`game:${game_id}`)
     closeGame(game_id);
+}
+
+export function newSeed(){
+    return Math.round(
+        Math.random() * 10_000_000_000_000_000
+    )
 }

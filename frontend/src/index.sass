@@ -67,13 +67,33 @@ $pagination-active-border-color: #ffffff !important
     .button.is-themed
         background: $colorBright
         border: 2px solid color.adjust($colorBright, $lightness: -15%)
-        color: white !important
+        &:not(.is-loading)
+            color: white !important
 
         &:hover
             background: color.adjust($colorBright, $lightness: -25%)
 
     .banner
         background: $color !important
+
+    .submission
+        background-color: $color
+        border-color: $colorDark
+
+        &:hover
+            background-color: color.adjust($color, $lightness: 10%)
+
+@keyframes wiggle
+  0%
+    transform: rotate(2deg)
+  25%
+    transform: rotate(-2deg)
+  50%
+    transform: rotate(4deg)
+  75%
+    transform: rotate(-1deg)
+  100%
+    transform: rotate(0deg)
 
 .banner-container
     color: white !important
@@ -107,7 +127,7 @@ $pagination-active-border-color: #ffffff !important
             font-size: 1.75em !important
             margin-right: 0.25em
 
-html
+.themes
     &.is-pink
         @include colorOnTheme($pink, $pinkBright, $pinkDark)
     &.is-blue
@@ -197,13 +217,14 @@ $spriteWidth: 80px
 
         &.is-active
             $width: 1px
-            -webkit-filter: drop-shadow($width $width 0 $logoBlue) drop-shadow(-$width -$width 0 $logoBlue)
-            filter: drop-shadow($width $width 0 $logoBlue) drop-shadow(-$width -$width 0 $logoBlue)
+            -webkit-filter: drop-shadow($width $width 0 $logoBlue) drop-shadow((-$width) (-$width) 0 $logoBlue)
+            filter: drop-shadow($width $width 0 $logoBlue) drop-shadow((-$width) (-$width) 0 $logoBlue)
 
 .is-player-menu
     max-width: calc(($spriteWidth * 7) + (0.5em * 6)) !important
 
-.player-list
+.player-list,
+.submissions
     display: flex
     align-items: center
     justify-content: center
@@ -214,6 +235,40 @@ $spriteWidth: 80px
 
     > .player-token
         width: 300px
+
+.submissions
+    max-width: unset !important
+
+    > .submission
+        width: 420px
+        min-height: 100px
+        border-radius: 6px
+
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: 1.5rem
+
+        &:not(.is-revealed)
+            border-style: solid
+            border-width: 2px
+
+            p
+                opacity: 0
+                user-select: none
+                -ms-user-select: none
+                -moz-user-select: none
+                -webkit-user-select: none
+
+            &:hover
+                animation-name: wiggle
+                animation-duration: 1000ms
+                animation-iteration-count: 1
+                animation-timing-function: ease-in-out
+
+        &.is-revealed
+            background-color: white !important
+            color: black !important
 
 .player-token
     .title
@@ -226,6 +281,9 @@ $spriteWidth: 80px
 
     .image
         max-width: 70px
+
+        img
+            max-height: 80px
 
     &.is-disconnected
         opacity: 0.5
@@ -255,7 +313,6 @@ $spriteWidth: 80px
         width: 100%
         height: 8vh
         
-
 .question-cards
 
     .column:nth-child(1)
@@ -286,3 +343,4 @@ $spriteWidth: 80px
 
         .question-card.is-chosen
             transform: scale(1.1)
+

@@ -136,3 +136,96 @@ export async function chooseQuestion(question: string){
 
     return response.data
 }
+
+export async function createSubmission(submission: string){
+    const state = getState()
+    const game_id = state.game.data.id
+    const response = await axios.post<StandardResponse>(`/v1/submit-response`, { game_id, submission })
+
+    if(response.status !== 200){
+        console.error(response)
+    }
+
+    const { game, session_id } = response.data
+
+    if(game && session_id){
+        dispatch(
+            setGame({
+                game,
+                sessionId: session_id
+            })
+        )
+    }
+
+    return response.data
+}
+
+export async function revealCard(player_id: string){
+    const state = getState()
+    const game_id = state.game.data.id
+    const response = await axios.post<StandardResponse>(`/v1/reveal-card`, { game_id, player_id })
+
+    if(response.status !== 200){
+        console.error(response)
+    }
+
+    const { game, session_id } = response.data
+
+    if(game && session_id){
+        dispatch(
+            setGame({
+                game,
+                sessionId: session_id
+            })
+        )
+    }
+
+    return response.data
+}
+
+export async function finishRevealing(){
+    const state = getState()
+    const game_id = state.game.data.id
+    const response = await axios.post<StandardResponse>(`/v1/finish-revealing`, { game_id })
+
+    if(response.status !== 200){
+        console.error(response)
+    }
+
+    const { game, session_id } = response.data
+
+    if(game && session_id){
+        dispatch(
+            setGame({
+                game,
+                sessionId: session_id
+            })
+        )
+    }
+
+    return response.data
+}
+
+
+export async function submitGuess(guessed_player_id: string, correct_player_id: string){
+    const state = getState()
+    const game_id = state.game.data.id
+    const response = await axios.post<StandardResponse>(`/v1/guess`, { game_id, guessed_player_id, correct_player_id })
+
+    if(response.status !== 200){
+        console.error(response)
+    }
+
+    const { game, session_id } = response.data
+
+    if(game && session_id){
+        dispatch(
+            setGame({
+                game,
+                sessionId: session_id
+            })
+        )
+    }
+
+    return response.data
+}

@@ -2,5 +2,8 @@
     - Socket disconects might handle this?
 - On game ended, go to a "thanks for playing" screen
 - What if the current player leaves?
+- What if a player leaves in the middle of submissions? Need to recalc if submissions are done or not.
 - What if host leaves the game?
 - Session id needs to be saved as a value, as the req.session.id value can rotate?
+- Have some fun app responses like "y'all are nasty" when there's a lot of NSFW or "player 1 must be really horny?"
+- Must have at least 3 players to play

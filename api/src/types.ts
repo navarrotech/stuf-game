@@ -4,7 +4,7 @@ import type { Route, Request, Response } from "navarrotech-express";
 
 export type Game = {
     id: string;
-    questions_asked: Record<string, string[]>;
+    questions_asked: Record<string, boolean>;
     host_id: string;
     players: Player[];
 
@@ -15,15 +15,24 @@ export type Game = {
     current_player: string | null;
     current_question: string | null;
     current_question_time_expiration: number | null;
-    current_submissions: Record<string, string>;
+    current_submissions: Record<string, Submission>;
     current_guess: Record<string, string>;
     finished_submissions: boolean;
+    finished_revealing: boolean;
+    finished_guessing: boolean;
+    shuffle_seed: number;
 
     settings: GameSettings;
 
     round: number;
     time_started: number;
     time_last_updated: number;
+}
+
+export type Submission = {
+    text: string;
+    player: string;
+    revealed: boolean;
 }
 
 export type GameSettings = {

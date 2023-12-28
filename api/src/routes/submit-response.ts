@@ -1,17 +1,17 @@
 // Copyright © 2023 Navarrotech
 
-import type { Request, Response, Route, Game, Player } from "../types";
+import type { Request, Response, Route } from "../types";
 
 import { gameIdSchema, yup } from "../schemas";
 import { getGame, updateGame } from "../game";
 
 type RequestBody = {
     game_id: string,
-    question: string,
+    submission: string,
 }
 
 async function handler(req: Request, res: Response): Promise<void> {
-    const { game_id, question } = req.body as RequestBody;
+    const { game_id, submission } = req.body as RequestBody;
     const session_id = req.session.id;
 
     const game = await getGame(game_id);
@@ -31,9 +31,27 @@ async function handler(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    game.current_question = question;
-    game.questions_asked[question] = true;
-    game.current_question_time_expiration = Date.now() + 1000 * 60 * 2;
+    if(game.current_submissions[session_id]){
+        res.status(400).json({
+            error: "You've already submitted",
+        })
+        return;
+    }
+
+    game.current_submissions[session_id] = {
+        text: submission,
+        player: session_id,
+        revealed: false,
+    };
+
+    let everyoneSubmitted = true;
+    game.players.forEach(player => {
+        if(!game.current_submissions[player.id] && player.id !== game.host_id){
+            everyoneSubmitted = false;
+        }
+    })
+
+    game.finished_submissions = everyoneSubmitted;
     updateGame(game);
 
     res.status(200).send({
@@ -46,17 +64,17 @@ const validiator = yup
     .object()
     .shape({
         game_id: gameIdSchema,
-        question: yup
+        submission: yup
             .string()
-            .typeError("Question must be a string")
+            .typeError("Submission must be a string")
             .trim()
-            .min(1, "Question must be at least 1 character")
-            .max(100, "Question must be at most 100 characters")
-            .required("Question is required"),
+            .min(1, "Your answer is too short!")
+            .max(100, "Your answer is too long!")
+            .required("Submission is required"),
     })
 
 export default {
-    path: "/v1/choose-question",
+    path: "/v1/submit-response",
     method: "post",
     handler,
     validiator,

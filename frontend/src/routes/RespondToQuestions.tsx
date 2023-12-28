@@ -4,6 +4,7 @@ import { useState } from "react"
 import type { State } from "../redux-store/game"
 
 import { useTheme } from "../themes"
+import { createSubmission } from '../api'
 import { PlayerList } from "../common/PlayerToken"
 import BannerMenu from "../common/BannerMenu"
 
@@ -30,13 +31,13 @@ export default function RespondToQuestions({ game }: Props){
 
     async function submit(){
         setLoading(true)
-        
+        createSubmission(response)
     }
 
-    if(host_id !== mySessionId){
+    if(host_id !== mySessionId || current_submissions[mySessionId]){
         return <div className="container is-max-desktop has-text-centered">
             <div className="block">
-                <h1 className="title is-size-1 has-text-white">{ current_question }</h1>
+                <h1 className="title is-size-1 has-text-white">"{ current_question }"</h1>
             </div>
             {/* TODO: Progressbar here */}
             <div className="field">
@@ -72,7 +73,7 @@ export default function RespondToQuestions({ game }: Props){
     return <BannerMenu
         bannerLeft="Collecting responses..."
     >
-        <h1 className="title is-size-1 has-text-white">{ current_question }</h1>
+        <h1 className="title is-size-1 has-text-white">"{ current_question }"</h1>
         {/* TODO: Progressbar here */}
         <PlayerList 
             players={players}
