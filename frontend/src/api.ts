@@ -17,50 +17,22 @@ axios.defaults.withCredentials = true
 axios.defaults.responseType = "json"
 axios.defaults.validateStatus = () => true
 
-type CreateResponse = {
-    game?: Game,
-    host_id?: string
-}
-
-export async function createGame(): Promise<CreateResponse> {
-    const response = await axios.post<CreateResponse>("/v1/create")
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, host_id } = response.data
-
-    if(game && host_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: host_id
-            })
-        )
-    }
-
-    return response.data as CreateResponse
-}
-
 type StandardResponse = {
     game?: Game,
     session_id?: string,
     error?: string,
 }
-
-export async function joinGame(name: string, image: string): Promise<StandardResponse> {
+async function standardRequest(url: string, additionalParams: any): Promise<StandardResponse>{
     const state = getState()
-    const game_id = state.game.data.id
+    const game_id = additionalParams?.game_id || state.game?.data?.id
 
     if(!game_id){
-        console.error(state, "No local game id found")
+        console.error(state, "No game id found to use while fetching ", url, additionalParams)
     }
 
-    const response = await axios.post<StandardResponse>("/v1/join", {
+    const response = await axios.post<StandardResponse>(url, {
         game_id,
-        name,
-        image
+        ...additionalParams
     })
 
     if(response.status !== 200){
@@ -81,175 +53,13 @@ export async function joinGame(name: string, image: string): Promise<StandardRes
     return response.data
 }
 
-export async function getGame(game_id: string): Promise<StandardResponse> {
-    const response = await axios.post<StandardResponse>(`/v1/get`, { game_id })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    return response.data
-}
-
-export async function markReady(): Promise<StandardResponse> {
-    const state = getState()
-    const game_id = state.game.data.id
-    const response = await axios.post<StandardResponse>(`/v1/ready`, { game_id })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, session_id } = response.data
-
-    if(game && session_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: session_id
-            })
-        )
-    }
-
-    return response.data
-}
-
-export async function chooseQuestion(question: string){
-    const state = getState()
-    const game_id = state.game.data.id
-    const response = await axios.post<StandardResponse>(`/v1/choose-question`, { game_id, question })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, session_id } = response.data
-
-    if(game && session_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: session_id
-            })
-        )
-    }
-
-    return response.data
-}
-
-export async function createSubmission(submission: string){
-    const state = getState()
-    const game_id = state.game.data.id
-    const response = await axios.post<StandardResponse>(`/v1/submit-response`, { game_id, submission })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, session_id } = response.data
-
-    if(game && session_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: session_id
-            })
-        )
-    }
-
-    return response.data
-}
-
-export async function revealCard(player_id: string){
-    const state = getState()
-    const game_id = state.game.data.id
-    const response = await axios.post<StandardResponse>(`/v1/reveal-card`, { game_id, player_id })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, session_id } = response.data
-
-    if(game && session_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: session_id
-            })
-        )
-    }
-
-    return response.data
-}
-
-export async function finishRevealing(){
-    const state = getState()
-    const game_id = state.game.data.id
-    const response = await axios.post<StandardResponse>(`/v1/finish-revealing`, { game_id })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, session_id } = response.data
-
-    if(game && session_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: session_id
-            })
-        )
-    }
-
-    return response.data
-}
-
-
-export async function submitGuess(guessed_player_id: string, correct_player_id: string){
-    const state = getState()
-    const game_id = state.game.data.id
-    const response = await axios.post<StandardResponse>(`/v1/guess`, { game_id, guessed_player_id, correct_player_id })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, session_id } = response.data
-
-    if(game && session_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: session_id
-            })
-        )
-    }
-
-    return response.data
-}
-
-
-export async function endTurn(){
-    const state = getState()
-    const game_id = state.game.data.id
-    const response = await axios.post<StandardResponse>(`/v1/end-turn`, { game_id })
-
-    if(response.status !== 200){
-        console.error(response)
-    }
-
-    const { game, session_id } = response.data
-
-    if(game && session_id){
-        dispatch(
-            setGame({
-                game,
-                sessionId: session_id
-            })
-        )
-    }
-
-    return response.data
-}
+export const createGame       = async ()                               => standardRequest("/v1/create",           { })
+export const joinGame         = async (name: string, image: string)    => standardRequest("/v1/join",             { name, image })
+export const getGame          = async (game_id: string)                => standardRequest("/v1/get",              { game_id })
+export const markReady        = async ()                               => standardRequest("/v1/ready",            { })
+export const chooseQuestion   = async (question: string)               => standardRequest("/v1/choose-question",  { question })
+export const createSubmission = async (submission: string)             => standardRequest("/v1/submit-response",  { submission })
+export const revealCard       = async (player_id: string)              => standardRequest("/v1/reveal-card",      { player_id })
+export const finishRevealing  = async ()                               => standardRequest("/v1/finish-revealing", { })
+export const submitGuess      = async (guess: string, correct: string) => standardRequest("/v1/guess",            { guessed_player_id: guess, correct_player_id: correct })
+export const endTurn          = async ()                               => standardRequest("/v1/end-turn",         {})

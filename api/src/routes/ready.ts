@@ -22,9 +22,9 @@ async function handler(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    if(game.players.length < 2){
+    if(game.players.length <= 2){
         res.status(400).json({
-            error: "Not enough players to start the game",
+            error: "Not enough players to start the game, must have at least 3 players",
         })
         return;
     }

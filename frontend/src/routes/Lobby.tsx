@@ -37,14 +37,14 @@ export default function Lobby({ game }: Props){
             </div>
             <div
                 className="level-right has-tooltip-left"
-                data-tooltip={game.data.players.length === 1
-                    ? "You need at least 2 players to start the game"
+                data-tooltip={game.data.players.length <= 2
+                    ? "You need at least 3 players to start the game"
                     : undefined
                 }
             >
                 <button
                     className="button is-success is-large"
-                    disabled={game.data.players.length === 1 || isReady}
+                    disabled={game.data.players.length <= 2 || isReady}
                     type="button"
                     onClick={() => {
                         if(!isReady){
