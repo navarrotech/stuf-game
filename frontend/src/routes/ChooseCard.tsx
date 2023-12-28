@@ -101,7 +101,7 @@ export default function ChooseCard({ game }: Props){
 function FormatQuestion(question: string){
     const indexOfStuff = question.indexOf("Stuff")
     const beforeStuff = question.slice(0, indexOfStuff)
-    const afterStuff = question.slice(indexOfStuff + 4)
+    const afterStuff = question.slice(indexOfStuff + 5)
 
     return <>
         <span className="has-text-weight-normal">{ beforeStuff }</span>

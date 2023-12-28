@@ -229,3 +229,27 @@ export async function submitGuess(guessed_player_id: string, correct_player_id: 
 
     return response.data
 }
+
+
+export async function endTurn(){
+    const state = getState()
+    const game_id = state.game.data.id
+    const response = await axios.post<StandardResponse>(`/v1/end-turn`, { game_id })
+
+    if(response.status !== 200){
+        console.error(response)
+    }
+
+    const { game, session_id } = response.data
+
+    if(game && session_id){
+        dispatch(
+            setGame({
+                game,
+                sessionId: session_id
+            })
+        )
+    }
+
+    return response.data
+}

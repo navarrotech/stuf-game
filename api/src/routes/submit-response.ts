@@ -46,7 +46,8 @@ async function handler(req: Request, res: Response): Promise<void> {
 
     let everyoneSubmitted = true;
     game.players.forEach(player => {
-        if(!game.current_submissions[player.id] && player.id !== game.host_id){
+        // All players must submit, so check each player that isn't the current player
+        if(!game.current_submissions[player.id] && player.id !== game.current_player){
             everyoneSubmitted = false;
         }
     })
@@ -69,7 +70,7 @@ const validiator = yup
             .typeError("Submission must be a string")
             .trim()
             .min(1, "Your answer is too short!")
-            .max(100, "Your answer is too long!")
+            .max(55, "Your answer is too long!")
             .required("Submission is required"),
     })
 

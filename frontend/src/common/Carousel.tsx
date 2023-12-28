@@ -39,18 +39,22 @@ export default function Carousel({ items, keyof, selected, element, setSelected 
     }
 
     if(items.length === 1){
-        return <div className="level-item">
-            { element(items[0]) }
+        return <div className="level-item carousel">
+            <div className="carousel-target">
+                { element(items[0]) }
+            </div>
         </div>
     }
 
-    return <div className="level-item">
+    return <div className="level-item carousel">
         <button className="button is-white mx-4" type="button" onClick={handlePrevClick}>
             <span className="icon">
                 <FontAwesomeIcon icon={faCaretLeft} />
             </span>
         </button>
-        { element(items[index]) }
+        <div className="carousel-target">
+            { element(items[index]) }
+        </div>
         <button className="button is-white mx-4" type="button" onClick={handleNextClick}>
             <span className="icon">
                 <FontAwesomeIcon icon={faCaretRight} />

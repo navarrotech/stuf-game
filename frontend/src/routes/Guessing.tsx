@@ -19,7 +19,7 @@ export default function Guessing({ game }: Props){
     const {
         mySessionId,
         data: {
-            host_id,
+            current_player,
             current_question,
             current_guess,
             current_submissions,
@@ -33,13 +33,13 @@ export default function Guessing({ game }: Props){
         ]?.[key]
     }
 
-    const isHost = mySessionId === host_id
-    const host = players.find(player => player.id === host_id)
+    const isCurrentPlayer = mySessionId === current_player
+    const host = players.find(player => player.id === current_player)
     const submissions = Object.values(current_submissions)
 
     const remaining = submissions.filter(submission => !current_guess[submission.player])
 
-    const hostlessPlayers = players.filter(player => player.id !== host_id)
+    const hostlessPlayers = players.filter(player => player.id !== current_player && !current_guess[player.id])
 
     const [ selectedPlayer, setSelectedPlayer ] = useState<string>(getRandom(hostlessPlayers, 'id'))
     const [ selectedSubmission, setSelectedSubmission ] = useState<string>(getRandom(remaining, 'player'))
@@ -48,6 +48,14 @@ export default function Guessing({ game }: Props){
     useEffect(() => {
         if(remaining.length === 0){
             return;
+        }
+        if(current_guess[selectedPlayer]){
+            setSelectedPlayer(
+                getRandom(hostlessPlayers, 'id')
+            )
+            setSelectedSubmission(
+                getRandom(remaining, 'player')
+            )
         }
         if(!selectedPlayer){
             setSelectedPlayer(
@@ -62,7 +70,7 @@ export default function Guessing({ game }: Props){
         // eslint-disable-next-line
     }, [ hostlessPlayers, remaining.length, selectedPlayer, selectedSubmission, remaining.length ])
 
-    if(isHost){
+    if(isCurrentPlayer){
         return <div className="container is-max-fullhd has-text-centered">
             <div className="block">
                 <h1 className="title is-size-1 has-text-white">"{ current_question }"</h1>
@@ -76,7 +84,9 @@ export default function Guessing({ game }: Props){
                     keyof="player"
                     selected={selectedSubmission}
                     setSelected={setSelectedSubmission}
-                    element={submission => <div className="box m-0">{ submission.text }</div>}
+                    element={submission => <div className="box m-0">
+                        <p className="is-size-5">{ submission.text }</p>
+                    </div>}
                 />
             </div>
             <div className="block">
@@ -119,10 +129,10 @@ export default function Guessing({ game }: Props){
         <PlayerList
             players={players}
             subtitle={player => {
-                if(player.id === host_id){
-                    return "Guessing..."
+                if(player.id === current_player){
+                    return "⌛ Guessing..."
                 }
-                return current_guess[player.id] ? "Guess locked in" : "Fate undecided..."
+                return current_guess[player.id] ? "✅ Guess locked in" : "Fate undecided..."
             }}
         />
     </BannerMenu>

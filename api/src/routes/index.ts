@@ -15,6 +15,7 @@ import submitResponse from './submit-response'
 import revealCard from './reveal-card'
 import finishRevealing from './finish-revealing'
 import submitGuess from './submit-guess'
+import endTurn from './end-turn'
 
 export const routes: Route[] = [
     newGame,
@@ -28,4 +29,5 @@ export const routes: Route[] = [
     revealCard,
     finishRevealing,
     submitGuess,
+    endTurn,
 ]

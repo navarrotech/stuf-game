@@ -19,7 +19,7 @@ export default function RespondToQuestions({ game }: Props){
 
     const { mySessionId } = game
     const {
-        host_id,
+        current_player,
         players,
 
         current_question,
@@ -31,10 +31,11 @@ export default function RespondToQuestions({ game }: Props){
 
     async function submit(){
         setLoading(true)
-        createSubmission(response)
+        await createSubmission(response)
+        setLoading(false)
     }
 
-    if(host_id !== mySessionId || current_submissions[mySessionId]){
+    if(current_player !== mySessionId && !current_submissions[mySessionId as string]){
         return <div className="container is-max-desktop has-text-centered">
             <div className="block">
                 <h1 className="title is-size-1 has-text-white">"{ current_question }"</h1>
@@ -47,6 +48,7 @@ export default function RespondToQuestions({ game }: Props){
                         className="input is-large"
                         type="text"
                         placeholder="Your answer here..."
+                        maxLength={55}
                         value={response}
                         onChange={(e) => setResponse(e.target.value)}
                         onKeyDown={(e) => {
@@ -78,7 +80,7 @@ export default function RespondToQuestions({ game }: Props){
         <PlayerList 
             players={players}
             subtitle={(player) => {
-                if(player.id === host_id){
+                if(player.id === current_player){
                     return "Collecting responses"
                 }
                 return current_submissions[player.id] 

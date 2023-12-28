@@ -37,7 +37,7 @@ async function handler(req: Request, res: Response): Promise<void> {
     let isFinished = true;
     Object
         .values(game.current_submissions)
-        .filter(submission => submission.player !== game.host_id)
+        .filter(submission => submission.player !== game.current_player)
         .forEach(submission => {
             if(game.current_guess[submission.player] === undefined){
                 isFinished = false;

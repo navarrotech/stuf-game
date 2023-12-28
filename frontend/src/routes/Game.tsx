@@ -12,6 +12,7 @@ import RespondToQuestions from "./RespondToQuestions"
 import RevealCards from "./RevealCards"
 import Guessing from "./Guessing"
 import { objectToBase64 } from "../common/utils"
+import ShowRoundResults from "./ShowRoundResults"
 
 export default function Game(){
     const game = useSelector(state => state.game)
@@ -64,6 +65,10 @@ export default function Game(){
 
     if(!finished_guessing){
         return <Guessing game={game} />
+    }
+
+    if(finished_guessing){
+        return <ShowRoundResults game={game} />
     }
 
     const bugInfo = objectToBase64(game)

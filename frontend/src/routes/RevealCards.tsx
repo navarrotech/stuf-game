@@ -14,12 +14,16 @@ type Props = {
 export default function RevealCards({ game }: Props){
     useTheme()
 
-    const isHost = game.mySessionId === game.data.host_id
     const {
         current_question,
         current_submissions,
         shuffle_seed,
+        current_player,
+        players,
     } = game.data
+    const isCurrentPlayer = game.mySessionId === current_player
+    const currentPlayer = players.find(player => player.id === current_player)
+    const currentPlayerName = currentPlayer?.name || 'Player'
 
     const questions = seededShuffle<Submission>(
         Object.values(
@@ -31,7 +35,7 @@ export default function RevealCards({ game }: Props){
     const done = questions.filter(question => !question.revealed).length === 0
 
     async function reveal(player_id: string){
-        if(!isHost || !done || current_submissions[player_id].revealed){
+        if(!isCurrentPlayer || done || current_submissions[player_id].revealed){
             return
         }
 
@@ -50,15 +54,16 @@ export default function RevealCards({ game }: Props){
                     className={`submission${
                         question.revealed ? ' is-revealed' : ''
                     }${
-                        isHost ? ' is-clickable' : ''
+                        isCurrentPlayer ? ' is-clickable' : ''
                     }`}
+                    data-tooltip={!isCurrentPlayer ? `${ currentPlayerName } will reveal` : undefined}
                     onClick={() => reveal(question.player)}
                 >
                     <p>{ question.text }</p>
                 </div>
             })
         }</div>
-        { isHost && <div className="block buttons is-centered" style={{
+        { isCurrentPlayer && <div className="block buttons is-centered" style={{
             opacity: done ? 1 : 0,
             pointerEvents: done ? 'all' : 'none'
         }}>
