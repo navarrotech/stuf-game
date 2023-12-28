@@ -14,6 +14,9 @@ import https from "https";
 // Misc
 import { NODE_ENV, PORT, SESSION_SECRET, USE_SSL } from './env'
 import { version } from './version'
+import path from 'path'
+
+const publicFolderPath = path.resolve(__dirname, "../") + "/public"
 
 const app = express({
     routes,
@@ -30,6 +33,7 @@ const app = express({
             maxAge: 1000 * 60 * 60 * 24, // 24 hours
         }
     },
+    publicFolderPath,
     cors: NODE_ENV === "development",
     storeSettings: {},
     sessionSecret: SESSION_SECRET,
@@ -61,6 +65,7 @@ Promise.all([ init() ])
     .then(() => server.listen(PORT, () => console.log(`
 Server running on port ${PORT}
 NODE_ENV: ${NODE_ENV}
+Public folder: ${publicFolderPath}
 version: ${version}
 
 Created by Navarrotech 2023`)))

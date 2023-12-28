@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "check": "tsc --noEmit index.ts --esModuleInterop",
+    "check": "tsc --noEmit src/index.ts --esModuleInterop --skipLibCheck",
     "compile": "tsc index.ts --esModuleInterop",
     "dev": "nodemon --exec ts-node src/index.ts"
   },

@@ -58,7 +58,7 @@ jobs:
 
       - run:
           name: Copy frontend build into API /public folder
-          command: cp -r ~/app/frontend/dist ~/app
+          command: cp -r ~/app/frontend/dist ~/app/api/public
 
       - restore_cache: 
           keys: 
@@ -71,20 +71,18 @@ jobs:
       - run: 
           name: Version API
           command: |
-            cd api/src
             VERSION=$(git rev-parse --short HEAD)
-            echo "export const version = '$VERSION';" > ./version.ts
+            echo "export const version = '$VERSION';" > ./api/srcversion.ts
 
       - save_cache:
           paths:
             - api/node_modules
           key: api-dependencies-{{ checksum "api/yarn.lock" }}
 
-      # I need to spend more time on this eventually
-      # For now, basic typescript pass/fail checking:
-      # - run:
-      #     name: Typescript test API
-      #     command: cd api && yarn tsc --noEmit src/index.ts --esModuleInterop --downlevelIteration --skipLibCheck
+      # Basic typescript pass/fail checking:
+      - run:
+          name: Typescript test API
+          command: cd api && yarn run check
 
       - setup_remote_docker:
           docker_layer_caching: true
