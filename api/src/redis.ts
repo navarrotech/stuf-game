@@ -21,7 +21,7 @@ export async function init(){
 }
 
 export async function makeUniqueGameId(): Promise<string> {
-    const id = nanoid(5);
+    const id = nanoid(5).toLowerCase();
     const exists = await client.exists(id);
     if (exists) {
         return await makeUniqueGameId();

@@ -6,12 +6,15 @@ import type { State } from "../redux-store/game";
 import { useTheme } from "../themes";
 import { seededShuffle } from "../common/utils";
 import { revealCard, finishRevealing } from '../api'
+import { useSound, getPaperSound } from "../sounds";
 
 type Props = {
     game: State
 }
 
 export default function RevealCards({ game }: Props){
+    const [ playPaperSound ] = useSound(getPaperSound())
+
     useTheme()
 
     const {
@@ -57,7 +60,10 @@ export default function RevealCards({ game }: Props){
                         isCurrentPlayer ? ' is-clickable' : ''
                     }`}
                     data-tooltip={!isCurrentPlayer ? `${ currentPlayerName } will reveal` : undefined}
-                    onClick={() => reveal(question.player)}
+                    onClick={() => {
+                        playPaperSound()
+                        reveal(question.player)
+                    }}
                 >
                     <p>{ question.text }</p>
                 </div>

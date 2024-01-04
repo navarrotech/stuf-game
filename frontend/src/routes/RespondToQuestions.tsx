@@ -6,6 +6,7 @@ import type { State } from "../redux-store/game"
 import { useTheme } from "../themes"
 import { createSubmission } from '../api'
 import { PlayerList } from "../common/PlayerToken"
+import { useSound, getIncorrectSound } from '../sounds'
 import BannerMenu from "../common/BannerMenu"
 
 type Props = {
@@ -16,6 +17,7 @@ export default function RespondToQuestions({ game }: Props){
 
     const [ response, setResponse ] = useState<string>("")
     const [ loading, setLoading ] = useState<boolean>(false)
+    const [ playSound ] = useSound(getIncorrectSound())
 
     const { mySessionId } = game
     const {
@@ -30,7 +32,11 @@ export default function RespondToQuestions({ game }: Props){
     useTheme()
 
     async function submit(){
+        if(loading){
+            return;
+        }
         setLoading(true)
+        playSound()
         await createSubmission(response)
         setLoading(false)
     }

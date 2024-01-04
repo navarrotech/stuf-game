@@ -1,4 +1,5 @@
 // Copyright © 2023 Navarrotech
+import { useEffect } from "react"
 
 import type { State } from "../redux-store/game"
 
@@ -12,6 +13,7 @@ import ShareButton from "../common/ShareButton"
 
 // API
 import { markReady } from '../api'
+import { useSound, sounds } from "../sounds"
 
 type Props = {
     game: State
@@ -19,9 +21,15 @@ type Props = {
 
 export default function Lobby({ game }: Props){
 
+    const [ playJoinSound ] = useSound(sounds.join)
     const isReady = game.me?.ready
 
     useTheme()
+
+    useEffect(() => {
+        playJoinSound()
+        // eslint-disable-next-line
+    }, [ game.data.players.length ])
 
     return <BannerMenu bannerLeft="Waiting for players to join..." bannerRight={<ShareButton />}>
         <div className="level is-fullwidth">

@@ -1,11 +1,12 @@
 // Copyright © 2023 Navarrotech
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { State } from "../redux-store/game";
 
 import { useTheme } from "../themes";
 import BannerMenu from "../common/BannerMenu";
 import { PlayerList } from "../common/PlayerToken";
+import { useSound, getIncorrectSound, getCorrectSound } from '../sounds'
 import { endTurn } from '../api'
 
 type Props = {
@@ -14,6 +15,8 @@ type Props = {
 
 export default function ShowRoundResults({ game }: Props){
     const [ show, setShow ] = useState<boolean>(false)
+    const [ playIncorrect ] = useSound(getIncorrectSound())
+    const [ playCorrect ] = useSound(getCorrectSound())
 
     const {
         mySessionId,
@@ -43,6 +46,19 @@ export default function ShowRoundResults({ game }: Props){
             : "red"
 
     useTheme(theme)
+
+    useEffect(() => {
+        if(isCurrentPlayer){
+            return;
+        }
+        if(scoreChange === 0){
+            playIncorrect()
+        }
+        else if(scoreChange === 1){
+            playCorrect()
+        }
+    // eslint-disable-next-line
+    }, [])
 
     if(isCurrentPlayer){
         scoreText = `You guessed ${correctGuesses.length} right and got +${correctGuesses.length * 2} points!`

@@ -5,6 +5,9 @@ Fun ideas:
 
 MVP:
 - Sound effects
+    - Some sounds implemented, I want all buttons to make a click noise
+    - Disconnect/reconnect noise?
+    - Start noise
 - Mobile
 - If a user creates a new game while hosting or being a part of another one, have them leave the old one first.
     - Socket disconects might handle this?
