@@ -19,15 +19,25 @@ type Props = {
     game: State
 }
 
+let prevPlayerCount = 0;
 export default function Lobby({ game }: Props){
 
     const [ playJoinSound ] = useSound(sounds.join)
+    const [ playLeftSound ] = useSound(sounds.leave)
     const isReady = game.me?.ready
 
     useTheme()
 
     useEffect(() => {
-        playJoinSound()
+        // Player joined:
+        if(game.data.players.length > prevPlayerCount){
+            playJoinSound()
+        }
+        // Player left:
+        else if(game.data.players.length < prevPlayerCount){
+            playLeftSound()
+        }
+        prevPlayerCount = game.data.players.length
         // eslint-disable-next-line
     }, [ game.data.players.length ])
 
